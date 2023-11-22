@@ -3,6 +3,7 @@
 #include <set>
 #include <SFML/Graphics.hpp>
 #include <cmath>
+#include <iomanip>
 
 struct graph{
     int n;
@@ -47,7 +48,7 @@ struct graph{
     }
 
     int getPath(int u, int v){
-        int inf = 1e9;
+        int inf = -1;
         std::vector <int> res(n, inf);
         std::set<std::pair<int, int>> d({{0, u}});
         while(d.size()){
@@ -140,7 +141,7 @@ int main() {
     a.inp();
     std::cout<<"Выберете операцию:\n\
 a u v w - добавить дугу (или изменить ее вес)\nd u v - удалить дугу\nc - понять связан ли граф\n\
-d u v - получить путь от u до v\np - нарисовать\ne - выход";
+w u v - получить путь от u до v\np - нарисовать\ne - выход\n";
     while(true){
         char c;
         int u, v, w;
@@ -156,14 +157,24 @@ d u v - получить путь от u до v\np - нарисовать\ne - �
             break;
         case 'p':
             a.draw();
+            for(auto i: a.mat){
+                for(auto j: i)
+                    std::cout<<std::setw(4)<<j;
+                std::cout<<'\n';
+            }
             break;
         case 'c':
             std::cout<<"Граф "<<(a.connected()? "": "не ")<<"связан\n";
             break;
+        case 'w':
+            std::cin>>u>>v;
+            w = a.getPath(u-1, v-1);
+            std::cout<<(w!=-1? "Кратчайший п":"П")<<"уть от "<<u<<" к "<<v<<": "<<(w == -1? "не существует": std::to_string(w))<<'\n';
+            break;
         case 'e':
             return 0;
         default:
-            std::cout<<"Неизвестная команда";
+            std::cout<<"Неизвестная команда\n";
             break;
         }
 
